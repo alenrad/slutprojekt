@@ -1,0 +1,84 @@
+#Global Variables
+
+#position paddles
+left_y = 500
+right_y = 100
+
+#position ball
+ball_x = 400
+ball_y = 300
+
+#speed of ball
+dy = 2
+dx = -2
+
+#score
+score_p1 = 0
+score_p2 = 0
+
+
+def setup():
+    size(800,600)
+    
+def draw():
+    global ball_x, ball_y, dx, dy, score_p1, score_p2
+    
+    #bounce off top & bottom
+    if ball_y > height - 10 or ball_y < 0:
+        dy = dy * -1
+        
+    #Score counting    
+    #if ball_x > height - 10 or ball_x < 0:
+       # dx = dx * -1
+    
+    #gone off end
+    if ball_x < 0:
+        score_p2 += 1
+        dx = 1
+        print("goal", score_p2)
+        
+    #bounce paddle
+    if ball_x < 65:
+        if ball_y > left_y:
+            if ball_y < (left_y + 80):
+                dx = 1
+        
+        
+    #moving ball
+    ball_x = ball_x + dx
+    ball_y = ball_y + dy
+
+    #screen
+    background(200)
+    
+    #paddles
+    rect(35,left_y,20,80) #p1 left
+    rect(740,right_y,20,80) #p2 right
+    
+    #ball
+    ellipse(ball_x,ball_y,20,20)
+    
+    #score
+    textSize(22)
+    text(score_p1, 35, 30) #p1
+    text(score_p2, 745, 30) #p2
+    text("Pong", 375, 30)
+    
+def keyPressed():
+    global left_y, right_y
+    
+    #moving left paddle
+    if key == "s":
+        left_y = left_y + 10
+    elif key == "w":
+        left_y = left_y - 10
+    
+    #moving right paddle
+    elif key == "l":
+        right_y = right_y + 10
+    elif key == "o":
+        right_y = right_y - 10
+        
+        
+def mousePressed():
+    print(mouseX, mouseY)
