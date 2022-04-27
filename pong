@@ -1,84 +1,163 @@
-#Global Variables
+#scoreboard
+left_score = 0
+right_score = 0
 
-#position paddles
-left_y = 500
-right_y = 100
+#paddle position
+left_y = 40
+right_y = 260
 
-#position ball
-ball_x = 400
-ball_y = 300
+#ball position
+ball_x = 390
+ball_y = 290
 
-#speed of ball
-dy = 2
-dx = -2
+#ball velocity
+ball_dx = -4
+ball_dy = -4
 
-#score
-score_p1 = 0
-score_p2 = 0
+#keys
+left_key = ""
+right_key = ""
 
+#game-on/over
+mode = "instruction-screen"
+
+def reset_game():
+    global ball_x, ball_y, ball_dy, ball_dx, left_score, right_score, mode
+    #scoreboard
+    left_score = 0
+    right_score = 0
+    
+    #paddle position
+    left_y = 40
+    right_y = 260
+    
+    #ball position
+    ball_x = 390
+    ball_y = 290
+    
+    #ball velocity
+    ball_dx = -4
+    ball_dy = -4
+    
+def ball_reset():
+    global ball_x, ball_y
+    ball_x = 390
+    ball_y = 290
 
 def setup():
     size(800,600)
     
 def draw():
-    global ball_x, ball_y, dx, dy, score_p1, score_p2
+    global ball_x, ball_y, ball_dy, ball_dx, left_score, right_score, mode, left_y, right_y
     
-    #bounce off top & bottom
-    if ball_y > height - 10 or ball_y < 0:
-        dy = dy * -1
-        
-    #Score counting    
-    #if ball_x > height - 10 or ball_x < 0:
-       # dx = dx * -1
-    
-    #gone off end
-    if ball_x < 0:
-        score_p2 += 1
-        dx = 1
-        print("goal", score_p2)
-        
-    #bounce paddle
-    if ball_x < 65:
-        if ball_y > left_y:
-            if ball_y < (left_y + 80):
-                dx = 1
-        
-        
-    #moving ball
-    ball_x = ball_x + dx
-    ball_y = ball_y + dy
-
-    #screen
     background(200)
+    if mode == "instruction-screen":
+        text("adasdass", 300 , 300)
+
     
-    #paddles
-    rect(35,left_y,20,80) #p1 left
-    rect(740,right_y,20,80) #p2 right
+    elif mode == "game-over":
+        if right_score > left_score:
+            text("left player wins", 100, 300)
+            text("press (r) to restart", 100, 300)
+        else:
+            text("right player wins", 500, 300)
+            text("press (r) to restart", 500, 300)
     
-    #ball
-    ellipse(ball_x,ball_y,20,20)
     
-    #score
-    textSize(22)
-    text(score_p1, 35, 30) #p1
-    text(score_p2, 745, 30) #p2
-    text("Pong", 375, 30)
+    elif mode == "game-on":
+        if left_key == "w":
+            left_y += -3
+        elif left_key == "s":
+            left_y += 3
+        elif right_key == "i":
+            right_y += -3
+        elif right_key == "k":
+            right_y += 3
     
+        #moving ball
+        ball_x = ball_x + ball_dx
+        ball_y = ball_y + ball_dy
+    
+        #bounce off top / bottom
+        if ball_y > 580 or ball_y < 0:
+            ball_dy = ball_dy * -1
+            
+        #bounce off top / bottom
+        if ball_x > 780 or ball_x < 0:
+            ball_dx = ball_dx * -1    
+            
+        #scoring - left or right side of screen
+        if ball_x > 780:
+            right_score += 1
+            ball_reset()
+        elif ball_x < 0:
+            left_score += 1
+            ball_reset()
+        
+        if right_score > 0 or left_score >0:
+            mode = "game-over"
+                
+        
+        #left paddle bounce     
+        if ball_x < 50 and ball_y > left_y and ball_y < (left_y + 80):
+            ball_dx = ball_dx * -1        
+        
+            #right paddle bounce     
+        if ball_x > 740 and ball_y > right_y and ball_y < (right_y + 80):
+            ball_dx = ball_dx * -1    
+            
+        
+    if mode == "game-on" or mode == "game-over":
+        #score
+        textSize(28)
+        text(right_score, 350, 40)
+        text(left_score, 430, 40)
+            
+        #paddles
+        rect(30,left_y,20,80) #left paddle
+        rect(770,right_y,20,80) #right paddle
+            
+        #ball
+        rect(ball_x,ball_y,20,20)
+        
+        #line in middle
+        rect(390, 0, 20, 600)
+        
+def keyReleased():
+    global left_key, right_key
+    #p1
+    if key == "w":
+        left_key = ""
+
+    elif key == "s":
+        left_key = ""
+    #p2
+    if key == "i":
+        right_key = ""
+        
+    elif key == "k":
+        right_key = ""
+
+
 def keyPressed():
-    global left_y, right_y
-    
-    #moving left paddle
-    if key == "s":
-        left_y = left_y + 10
-    elif key == "w":
-        left_y = left_y - 10
-    
-    #moving right paddle
-    elif key == "l":
-        right_y = right_y + 10
-    elif key == "o":
-        right_y = right_y - 10
+    global left_y, right_y, mode, left_key, right_key
+            
+    if mode == "instruction-screen":
+        mode = "game-on"
+            
+    if mode =="game-over":
+        mode = "game-on"
+        reset_game()
         
+    #p1
+    if key == "w":
+        left_key = "w"
         
-def mousePressed():
-    print(mouseX, mouseY)
+    elif key == "s":
+        left_key = "s"
+        
+    #p2
+    if key == "i":
+        right_key = "i"
+    elif key == "k":
+        right_key = "k"
