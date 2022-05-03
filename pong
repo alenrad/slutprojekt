@@ -3,7 +3,7 @@ left_score = 0
 right_score = 0
 
 #paddle position
-left_y = 40
+left_y = 260
 right_y = 260
 
 #ball position
@@ -23,6 +23,7 @@ mode = "instruction-screen"
 
 def reset_game():
     global ball_x, ball_y, ball_dy, ball_dx, left_score, right_score, mode
+    
     #scoreboard
     left_score = 0
     right_score = 0
@@ -50,30 +51,36 @@ def setup():
 def draw():
     global ball_x, ball_y, ball_dy, ball_dx, left_score, right_score, mode, left_y, right_y
     
-    background(200)
+    #instruction screen look
+    background(0)
     if mode == "instruction-screen":
-        text("adasdass", 300 , 300)
+        textSize(30)
+        text("Pong", 360 , 50)
+        text("Press any key to start game", 200 , 300)
+        text("P1", 50 , 50)
+        text("(W/S)", 30 , 90)
+        text("P2", 720 , 50)
+        text("(I/K)", 705 , 90)
+        text("First to 7", 330 , 550)
 
-    
     elif mode == "game-over":
         if right_score > left_score:
-            text("left player wins", 100, 300)
-            text("press (r) to restart", 100, 300)
+            text("Left player wins", 100, 300)
+            text("Press (r) to restart", 100, 350)
         else:
-            text("right player wins", 500, 300)
-            text("press (r) to restart", 500, 300)
-    
+            text("Right player wins", 500, 300)
+            text("Press (r) to restart", 500, 350)
     
     elif mode == "game-on":
         if left_key == "w":
-            left_y += -3
+            left_y += -6k
         elif left_key == "s":
-            left_y += 3
+            left_y += 6
         elif right_key == "i":
-            right_y += -3
+            right_y += -6
         elif right_key == "k":
-            right_y += 3
-    
+            right_y += 6
+
         #moving ball
         ball_x = ball_x + ball_dx
         ball_y = ball_y + ball_dy
@@ -94,18 +101,17 @@ def draw():
             left_score += 1
             ball_reset()
         
-        if right_score > 0 or left_score >0:
+        #winning number
+        if right_score == 7 or left_score == 7:
             mode = "game-over"
                 
-        
         #left paddle bounce     
         if ball_x < 50 and ball_y > left_y and ball_y < (left_y + 80):
-            ball_dx = ball_dx * -1        
+            ball_dx = ball_dx * -1       
         
             #right paddle bounce     
-        if ball_x > 740 and ball_y > right_y and ball_y < (right_y + 80):
-            ball_dx = ball_dx * -1    
-            
+        if ball_x > 750 and ball_y > right_y and ball_y < (right_y + 80):
+            ball_dx = ball_dx * -1  
         
     if mode == "game-on" or mode == "game-over":
         #score
@@ -121,42 +127,43 @@ def draw():
         rect(ball_x,ball_y,20,20)
         
         #line in middle
-        rect(390, 0, 20, 600)
+        line(400, 800, 400, 0)
+        stroke(255)
         
 def keyReleased():
     global left_key, right_key
-    #p1
+    #p1 keys
     if key == "w":
         left_key = ""
 
     elif key == "s":
         left_key = ""
-    #p2
+    #p2 keys
     if key == "i":
         right_key = ""
         
     elif key == "k":
         right_key = ""
 
-
+#key pressed actions
 def keyPressed():
     global left_y, right_y, mode, left_key, right_key
             
     if mode == "instruction-screen":
         mode = "game-on"
             
-    if mode =="game-over":
+    if mode =="game-over" and key == "r":
         mode = "game-on"
         reset_game()
         
-    #p1
+    #p1 keys
     if key == "w":
         left_key = "w"
         
     elif key == "s":
         left_key = "s"
         
-    #p2
+    #p2 keys
     if key == "i":
         right_key = "i"
     elif key == "k":
