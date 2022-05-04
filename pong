@@ -11,8 +11,16 @@ ball_x = 390
 ball_y = 290
 
 #ball velocity
-ball_dx = -4
-ball_dy = -4
+ball_dx = -5
+ball_dy = -5
+
+#power position
+power_x = 390
+power_y = 290
+
+#power velocity
+power_dx = -7
+power_dy = -7
 
 #keys
 left_key = ""
@@ -23,6 +31,7 @@ mode = "instruction-screen"
 
 def reset_game():
     global ball_x, ball_y, ball_dy, ball_dx, left_score, right_score, mode
+    global power_x, power_y, power_dx, power_dy
     
     #scoreboard
     left_score = 0
@@ -40,17 +49,31 @@ def reset_game():
     ball_dx = -4
     ball_dy = -4
     
+    #power position
+    ball_x = 390
+    ball_y = 290
+    
+    #power velocity
+    ball_dx = -8
+    ball_dy = -8
+    
 def ball_reset():
     global ball_x, ball_y
     ball_x = 390
     ball_y = 290
+    
+def power_reset():
+    global power_x, power_y
+    power_x = 390
+    power_y = 290
 
 def setup():
     size(800,600)
     
 def draw():
     global ball_x, ball_y, ball_dy, ball_dx, left_score, right_score, mode, left_y, right_y
-    
+    global power_x, power_y, power_dx, power_dy
+
     #instruction screen look
     background(0)
     if mode == "instruction-screen":
@@ -73,7 +96,7 @@ def draw():
     
     elif mode == "game-on":
         if left_key == "w":
-            left_y += -6k
+            left_y += -6
         elif left_key == "s":
             left_y += 6
         elif right_key == "i":
@@ -85,13 +108,25 @@ def draw():
         ball_x = ball_x + ball_dx
         ball_y = ball_y + ball_dy
     
-        #bounce off top / bottom
+        #moving power ball
+        power_x = power_x + power_dx
+        power_y = power_y + power_dy
+        
+        #ball bounce off top / bottom
         if ball_y > 580 or ball_y < 0:
             ball_dy = ball_dy * -1
             
-        #bounce off top / bottom
+        #ball bounce off top / bottom
         if ball_x > 780 or ball_x < 0:
-            ball_dx = ball_dx * -1    
+            ball_dx = ball_dx * -1   
+            
+        #power bounce off top / bottom
+        if power_x > 780 or power_x < 0:
+            power_dx = power_dx * -1   
+            
+        #power bounce off top / bottom
+        if power_y > 580 or power_y < 0:
+            power_dy = power_dy * -1 
             
         #scoring - left or right side of screen
         if ball_x > 780:
@@ -105,28 +140,46 @@ def draw():
         if right_score == 7 or left_score == 7:
             mode = "game-over"
                 
-        #left paddle bounce     
+        #left paddle bounce for ball    
         if ball_x < 50 and ball_y > left_y and ball_y < (left_y + 80):
             ball_dx = ball_dx * -1       
         
-            #right paddle bounce     
+        #right paddle bounce for ball  
         if ball_x > 750 and ball_y > right_y and ball_y < (right_y + 80):
             ball_dx = ball_dx * -1  
         
+        #left paddle bounce for power    
+        if power_x < 50 and power_y > left_y and power_y < (left_y + 80):
+            right_score -= 2
+            power_reset()
+            
+        #right paddle bounce for power  
+        if power_x > 750 and power_y > right_y and power_y < (right_y + 80):
+            left_score -= 2
+            power_reset()
+
     if mode == "game-on" or mode == "game-over":
         #score
+        fill(255)
         textSize(28)
         text(right_score, 350, 40)
         text(left_score, 430, 40)
             
         #paddles
+        fill(255)
         rect(30,left_y,20,80) #left paddle
         rect(770,right_y,20,80) #right paddle
             
         #ball
+        fill(255)
         rect(ball_x,ball_y,20,20)
         
+        #power
+        fill(255, 51, 51)
+        ellipse(power_x,power_y,5,5)
+        
         #line in middle
+        fill(255)
         line(400, 800, 400, 0)
         stroke(255)
         
