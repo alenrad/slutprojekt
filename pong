@@ -55,8 +55,8 @@ def reset_game():
     ball_y = 290
     
     #ball velocity
-    ball_dx = -4
-    ball_dy = -4
+    ball_dx = -5
+    ball_dy = -5
     
     #little_ball position
     ball_x = 390
@@ -96,7 +96,7 @@ def draw():
     background(0)
     if mode == "instruction-screen":
         textSize(30)
-        text("Pong", 360 , 50)
+        text("Crazy Pong", 310 , 50)
         text("Press any key to start game", 200 , 300)
         text("P1", 50 , 50)
         text("(W/S)", 30 , 90)
@@ -131,8 +131,8 @@ def draw():
         little_ball_y = little_ball_y + little_ball_dy
         
         #moving powerup ball
-        powerup_x = powerup_x + powerup_dx
-        powerup_y = powerup_y + powerup_dy
+        powerup_x = powerup_x + powerup_dx 
+        powerup_y = powerup_y + powerup_dy 
         
         #ball bounce off top / bottom
         if ball_y > 580 or ball_y < 0:
@@ -193,7 +193,17 @@ def draw():
             print("power left player")
         elif ball_x == powerup_x and ball_y == powerup_y and ball_dx < 0:
             print("power right player")
-
+            
+        #paddle touch top/bottom
+        if left_y > 550:
+            left_y -= 6
+        elif left_y < 50:
+            left_y += 6
+        elif right_y > 550:
+            right_y -= 6
+        elif right_y < 50:
+            right_y += 6
+            
     if mode == "game-on" or mode == "game-over":
         #score
         fill(255)
@@ -203,8 +213,8 @@ def draw():
             
         #paddles
         fill(255)
-        rect(30,left_y,20,80) #left paddle
-        rect(770,right_y,20,80) #right paddle
+        arc(10, left_y, 50, 100, -HALF_PI, HALF_PI)
+        arc(790, right_y, 50, 100, HALF_PI,TWO_PI-HALF_PI)
             
         #ball
         fill(255)
@@ -252,7 +262,6 @@ def keyPressed():
     #p1 keys
     if key == "w":
         left_key = "w"
-        
     elif key == "s":
         left_key = "s"
         
@@ -261,3 +270,6 @@ def keyPressed():
         right_key = "i"
     elif key == "k":
         right_key = "k"
+        
+def mousePressed():
+    print(mouseX, mouseY)
