@@ -87,6 +87,38 @@ def little_ball_reset():
 def setup():
     size(800,600)
     
+def check_and_perform_bounce_on_left_paddle():
+    global left_y, left_x, ball_x, ball_y, ball_dx, ball_dy
+    distance_between_ball_paddle = ((left_y - ball_y)**2 + (0.0 - ball_x)**2)**0.5
+    performe_bounce = distance_between_ball_paddle < 70
+
+    if performe_bounce:
+        ball_dx = ball_dx * -1
+        angle_velocity = atan(ball_dy/ ball_dx)
+        angle_velocity += random(-1, 1) 
+    
+        velosity = (ball_dy**2 + ball_dx**2)**0.5
+        ball_dx = velosity*cos(angle_velocity)
+        ball_dy = velosity*sin(angle_velocity)
+        print(angle_velocity)
+    return
+
+def check_and_perform_bounce_on_right_paddle():
+    global right_y, right_x, ball_x, ball_y, ball_dx, ball_dy
+    distance_between_ball_paddle = ((right_y - ball_y)**2 + (800.0 - ball_x)**2)**0.5
+    performe_bounce = distance_between_ball_paddle < 70
+
+    if performe_bounce:
+        ball_dx = ball_dx * -1
+        angle_velocity = atan(ball_dy/ ball_dx)
+        angle_velocity += random(-1, 1) 
+    
+        velosity = (ball_dy**2 + ball_dx**2)**0.5
+        ball_dx = velosity*cos(angle_velocity+PI)
+        ball_dy = velosity*sin(angle_velocity+PI)
+        print(angle_velocity)
+    return
+        
 def draw():
     global ball_x, ball_y, ball_dy, ball_dx, left_score, right_score, mode, left_y, right_y
     global little_ball_x, little_ball_y, little_ball_dx, little_ball_dy
@@ -170,13 +202,11 @@ def draw():
         if right_score == 7 or left_score == 7:
             mode = "game-over"
                 
-        #left paddle bounce for ball    
-        if ball_x < 50 and ball_y > left_y and ball_y < (left_y + 80):
-            ball_dx = ball_dx * -1       
-        
+        #left paddle bounce for ball
+        check_and_perform_bounce_on_left_paddle()    
+     
         #right paddle bounce for ball  
-        if ball_x > 750 and ball_y > right_y and ball_y < (right_y + 80):
-            ball_dx = ball_dx * -1  
+        check_and_perform_bounce_on_right_paddle()
         
         #left paddle bounce for little_ball    
         if little_ball_x < 50 and little_ball_y > left_y and little_ball_y < (left_y + 80):
@@ -190,9 +220,9 @@ def draw():
             
         #ball bounce on powerup from paddles
         if ball_x == powerup_x and ball_y == powerup_y and ball_dx > 0:
-            print("power left player")
+            print("")
         elif ball_x == powerup_x and ball_y == powerup_y and ball_dx < 0:
-            print("power right player")
+            print("")
             
         #paddle touch top/bottom
         if left_y > 550:
@@ -213,12 +243,12 @@ def draw():
             
         #paddles
         fill(255)
-        arc(10, left_y, 50, 100, -HALF_PI, HALF_PI)
-        arc(790, right_y, 50, 100, HALF_PI,TWO_PI-HALF_PI)
+        arc(10, left_y, 100, 100, -HALF_PI, HALF_PI)
+        arc(790, right_y, 100, 100, HALF_PI,TWO_PI-HALF_PI)
             
         #ball
         fill(255)
-        rect(ball_x,ball_y,20,20)
+        ellipse(ball_x,ball_y,20,20)
         
         #little_ball
         fill(255, 51, 51)
