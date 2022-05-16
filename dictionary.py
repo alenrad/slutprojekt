@@ -1,0 +1,26 @@
+#global_variables
+glo = {
+    "left_score": 0,
+    "right_score": 0,
+    "left_y": 260,
+    "right_y": 260,
+    "paddle_height_left": 100,
+    "paddle_height_right": 100,
+    "powerup_count": 0,
+    "counter": 0,
+    "ball_x": 0,
+    "ball_y": 0,
+    "ball_dx": -5,
+    "ball_dy": -5,
+    "little_ball_x": 400,
+    "little_ball_y": 300,
+    "little_ball_dx": -7,
+    "little_ball_dy": -7,
+    "powerup_x": 400,
+    "powerup_y": 10,
+    "powerup_dx": 0,
+    "powerup_dy": -5,
+    "left_key": "",
+    "right_key": "",
+    "mode": "instruction-screen"
+    }
