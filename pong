@@ -167,13 +167,11 @@ def check_and_perform_collision_with_balls():
         check_and_perform_bounce_on_powerup_paddle()
         powerup_count = powerup_count + 1
         powerup_reset()
-
         
 def draw():
     global ball_x, ball_y, ball_dy, ball_dx, left_score, right_score, mode, left_y, right_y
     global little_ball_x, little_ball_y, little_ball_dx, little_ball_dy
     global powerup_x, powerup_y, powerup_dx, powerup_dy, paddle_height_left, paddle_height_right
-
 
     #instruction screen look
     background(0)
@@ -198,11 +196,11 @@ def draw():
     elif mode == "game-on":
         if left_key == "w":
             left_y += -6
-        elif left_key == "s":
+        if left_key == "s":
             left_y += 6
-        elif right_key == "i":
+        if right_key == "i":
             right_y += -6
-        elif right_key == "k":
+        if right_key == "k":
             right_y += 6
 
         #moving ball
@@ -345,6 +343,3 @@ def keyPressed():
         right_key = "i"
     elif key == "k":
         right_key = "k"
-        
-def mousePressed():
-    print(mouseX, mouseY)
