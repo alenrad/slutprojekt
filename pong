@@ -12,6 +12,7 @@ paddle_height_right = 100
 
 #powerup count
 powerup_count = 0
+counter = 0
 
 #ball position
 ball_x = 400
@@ -30,8 +31,8 @@ little_ball_dx = -7
 little_ball_dy = -7
 
 #powerup position
-powerup_x = 200
-powerup_y = 100
+powerup_x = 400
+powerup_y = 10
 
 #powerup velocity
 powerup_dx = 0
@@ -61,8 +62,9 @@ def reset_game():
     paddle_height_left = 100
     paddle_height_right = 100
 
-    #powerup reset
+    #powerup resets
     powerup_count = 0
+    counter = 0 
     
     #ball position
     ball_x = 390
@@ -89,15 +91,22 @@ def reset_game():
     powerup_dy = -7
     
 def ball_reset():
-    global ball_x, ball_y
+    global ball_x, ball_y, powerup_count
     ball_x = 390
     ball_y = 290
+    powerup_count = 0
     
-def powerup_reset():
+def powerup_remove():
     global powerup_x, powerup_y
     powerup_x = -1000
     powerup_y = -1000
     
+def powerup_reset():
+    global powerup_x, powerup_y, counter, powerup_count
+    powerup_x = 400
+    powerup_y = 200
+    counter = 0
+    powerup_count = 0
     
 def little_ball_reset():
     global little_ball_x, little_ball_y
@@ -125,48 +134,49 @@ def bounce_back_ball_right():
     ball_dx = velosity*cos(angle_velocity+PI)
     ball_dy = velosity*sin(angle_velocity+PI)
     
-def check_and_perform_bounce_on_powerup_paddle():
+def bounce_back_balls():
     global left_y, right_y, ball_x, ball_y, ball_dx, ball_dy
-    distance_between_ball_paddle_left = (((left_y - ball_y)**2 + (0.0 - ball_x)**2)**0.5)
-    distance_between_ball_paddle_right = (((right_y - ball_y)**2 + (800.0 - ball_x)**2)**0.5)
-    perform_bounce_left = distance_between_ball_paddle_left < 90
-    perform_bounce_right = distance_between_ball_paddle_right < 90
-    
-    if perform_bounce_left:
-        bounce_back_ball_left()
-    if perform_bounce_right:
-        bounce_back_ball_right()
-    
+    ball_dx = ball_dx * -1
+    angle_velocity = atan(ball_dy/ ball_dx)
+    angle_velocity += random(-1, 1) 
+    velosity = (ball_dy**2 + ball_dx**2)**0.5
+    ball_dx = velosity*cos(angle_velocity+PI)
+    ball_dy = velosity*sin(angle_velocity+PI)
+
 def check_and_perform_bounce_on_paddles():
-    global left_y, right_y, ball_x, ball_y, ball_dx, ball_dy
+    global left_y, right_y, ball_x, ball_y, ball_dx, ball_dy, counter
     distance_between_ball_paddle_left = (((left_y - ball_y)**2 + (0.0 - ball_x)**2)**0.5)
     distance_between_ball_paddle_right = (((right_y - ball_y)**2 + (800.0 - ball_x)**2)**0.5)
-    perform_bounce_left = distance_between_ball_paddle_left < 70
-    perform_bounce_right = distance_between_ball_paddle_right < 70
+    perform_bounce_left = distance_between_ball_paddle_left < 75
+    perform_bounce_right = distance_between_ball_paddle_right < 75
     
     if perform_bounce_left:
         bounce_back_ball_left()
+        counter += 1
     if perform_bounce_right:
         bounce_back_ball_right()
+        counter += 1
         
 def check_and_perform_collision_with_balls():
     global powerup_count,ball_x, ball_y, ball_dx, ball_dy, powerup_x, powerup_y, powerup_dx, powerup_dy, paddle_height_left, paddle_height_right
-    global paddle_height_right, paddle_height_left
+    global paddle_height_right, paddle_height_left, counter
     distance_between_balls = (((powerup_y - ball_y)**2 + (powerup_x - ball_x)**2)**0.5)
     perform_powerup = distance_between_balls < 20
     
     if perform_powerup and ball_dx > 0 and powerup_count == 0:
-        print("left")
         paddle_height_left = paddle_height_left + 100
-        check_and_perform_bounce_on_powerup_paddle()
         powerup_count = powerup_count + 1
+        powerup_remove()
+    if paddle_height_left == 150 and counter == 5:
+        paddle_height_left = 150-50
         powerup_reset()
     if perform_powerup and ball_dx < 0:
-        print("right")
         paddle_height_right = 100+50
-        check_and_perform_bounce_on_powerup_paddle()
         powerup_count = powerup_count + 1
-        powerup_reset()
+        powerup_remove()
+    if paddle_height_right == 150 and counter == 5:
+            paddle_height_right = 150-50
+            powerup_reset()
         
 def draw():
     global ball_x, ball_y, ball_dy, ball_dx, left_score, right_score, mode, left_y, right_y
