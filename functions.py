@@ -45,11 +45,9 @@ def check_and_perform_bounce_on_paddles():
     if perform_bounce_left:
         bounce_back_ball_left()
         glo["counter"] += 1
-        print(glo["counter"])
     if perform_bounce_right:
         bounce_back_ball_right()
         glo["counter"] += 1
-        print(glo["counter"])
         
 #left paddle bounce for little_ball    
     if  glo["little_ball_x"] < 40 and  glo["little_ball_y"] > glo["left_y"] and  glo["little_ball_y"] < (glo["left_y"] + 80):
