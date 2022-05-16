@@ -97,9 +97,10 @@ def ball_reset():
     powerup_count = 0
     
 def powerup_remove():
-    global powerup_x, powerup_y
+    global powerup_x, powerup_y, counter
     powerup_x = -1000
     powerup_y = -1000
+    counter = 0
     
 def powerup_reset():
     global powerup_x, powerup_y, counter, powerup_count
@@ -133,15 +134,6 @@ def bounce_back_ball_right():
     velosity = (ball_dy**2 + ball_dx**2)**0.5
     ball_dx = velosity*cos(angle_velocity+PI)
     ball_dy = velosity*sin(angle_velocity+PI)
-    
-def bounce_back_balls():
-    global left_y, right_y, ball_x, ball_y, ball_dx, ball_dy
-    ball_dx = ball_dx * -1
-    angle_velocity = atan(ball_dy/ ball_dx)
-    angle_velocity += random(-1, 1) 
-    velosity = (ball_dy**2 + ball_dx**2)**0.5
-    ball_dx = velosity*cos(angle_velocity+PI)
-    ball_dy = velosity*sin(angle_velocity+PI)
 
 def check_and_perform_bounce_on_paddles():
     global left_y, right_y, ball_x, ball_y, ball_dx, ball_dy, counter
@@ -153,6 +145,7 @@ def check_and_perform_bounce_on_paddles():
     if perform_bounce_left:
         bounce_back_ball_left()
         counter += 1
+        print(counter)
     if perform_bounce_right:
         bounce_back_ball_right()
         counter += 1
@@ -161,22 +154,22 @@ def check_and_perform_collision_with_balls():
     global powerup_count,ball_x, ball_y, ball_dx, ball_dy, powerup_x, powerup_y, powerup_dx, powerup_dy, paddle_height_left, paddle_height_right
     global paddle_height_right, paddle_height_left, counter
     distance_between_balls = (((powerup_y - ball_y)**2 + (powerup_x - ball_x)**2)**0.5)
-    perform_powerup = distance_between_balls < 20
+    perform_powerup = distance_between_balls < 30
     
     if perform_powerup and ball_dx > 0 and powerup_count == 0:
-        paddle_height_left = paddle_height_left + 100
+        paddle_height_left = 100 + 50
         powerup_count = powerup_count + 1
         powerup_remove()
-    if paddle_height_left == 150 and counter == 5:
-        paddle_height_left = 150-50
-        powerup_reset()
     if perform_powerup and ball_dx < 0:
         paddle_height_right = 100+50
         powerup_count = powerup_count + 1
         powerup_remove()
-    if paddle_height_right == 150 and counter == 5:
+    if paddle_height_right > 100 and counter > 10:
             paddle_height_right = 150-50
             powerup_reset()
+    if paddle_height_left > 100 and counter > 10:
+        paddle_height_left = 150-50
+        powerup_reset()
         
 def draw():
     global ball_x, ball_y, ball_dy, ball_dx, left_score, right_score, mode, left_y, right_y
@@ -265,12 +258,12 @@ def draw():
         check_and_perform_bounce_on_paddles()    
         
         #left paddle bounce for little_ball    
-        if little_ball_x < 50 and little_ball_y > left_y and little_ball_y < (left_y + 80):
+        if little_ball_x < 40 and little_ball_y > left_y and little_ball_y < (left_y + 80):
             right_score -= 2
             little_ball_reset()
             
         #right paddle bounce for little_ball  
-        if little_ball_x > 750 and little_ball_y > right_y and little_ball_y < (right_y + 80):
+        if little_ball_x > 760 and little_ball_y > right_y and little_ball_y < (right_y + 80):
             left_score -= 2
             little_ball_reset()
             
