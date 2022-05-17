@@ -2,44 +2,39 @@ from dictionary import *
 from functions import *
 from visuals import *
 
-def reset_game():
-    glo["mode"]
-    
+#reset not working properly
+
 def setup():
     size(800,600)
         
 def draw():
     glo["mode"]
-
-    #instruction screen look
     background(0)
     if glo["mode"] == "instruction-screen":
         visual_instruction_screen()
     elif glo["mode"] == "game-over":
         if  glo["right_score"] >  glo["left_score"]:
-            text("Left player wins", 100, 300)
-            text("Press (r) to restart", 100, 350)
+            left_winner_visuals()
         else:
-            text("Right player wins", 500, 300)
-            text("Press (r) to restart", 500, 350)
+            right_winner_visuals()
     #for keys
     elif glo["mode"] == "game-on":
-        visuals_keys_game_over()
+        visuals_keys_game_over(glo)
 
-        check_balls_bounce_off_top_or_bottom()
+        check_balls_bounce_off_top_or_bottom(glo)
 
-        move_all_balls()
+        move_all_balls(glo)
 
-        check_and_perform_scoring()
+        check_and_perform_scoring(glo)
 
-        check_and_perform_bounce_on_paddles()    
+        check_and_perform_bounce_on_paddles(glo)    
 
-        check_and_perform_collision_with_balls()
+        check_and_perform_collision_with_balls(glo)
         
-        check_if_paddle_touch_top_bottom()
+        check_if_paddle_touch_top_bottom(glo)
 
     if glo["mode"] == "game-on" or glo["mode"] == "game-over":
-        visuals_game_over()
+        visuals_game_over(glo)
         
 def keyReleased():
     #p1 keys
