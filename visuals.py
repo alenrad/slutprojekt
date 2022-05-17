@@ -1,5 +1,13 @@
 from dictionary import *
 
+def left_winner_visuals():
+    text("Left player wins", 100, 300)
+    text("Press (r) to restart", 100, 350)
+    
+def right_winner_visuals():
+    text("Right player wins", 500, 300)
+    text("Press (r) to restart", 500, 350)
+
 def visual_instruction_screen():
     textSize(30)
     text("Crazy Pong", 310 , 50)
@@ -10,7 +18,7 @@ def visual_instruction_screen():
     text("(I/K)", 705 , 90)
     text("First to 7", 330 , 550)
     
-def visuals_game_over():
+def visuals_game_over(glo):
     fill(255)
     textSize(28)
     text(glo["right_score"], 350, 40)
@@ -30,14 +38,14 @@ def visuals_game_over():
     ellipse(glo["little_ball_x"], glo["little_ball_y"],5,5)
     
     #powerup ball
-    fill(255, 51, 51)
+    fill(124,252,0)
     ellipse(glo["powerup_x"], glo["powerup_y"], 50, 50)
     
     #line in middle
     fill(255)
     line(400, 800, 400, 0)
     stroke(255)
-def visuals_keys_game_over():
+def visuals_keys_game_over(glo):
     if glo["left_key"] == "w":
         glo["left_y"] += -6
     if glo["left_key"] == "s":
